@@ -21,6 +21,7 @@ app.set('view engine', 'ejs');
 //middleware 
 app.use(morgan('dev'));
 app.use(express.static('public'));
+app.use(express.urlencoded({extended: true}));
 
 // mongoose test routes
 // app.get('/add-blog', (req, res) =>{
@@ -86,11 +87,45 @@ app.get('/blogs', (req, res) =>{
     });
 });
 
+app.post('/blogs', (req, res) =>{
+    const blog = new Blog(req.body);
+
+    blog.save().then((result) =>{
+        res.redirect('/blogs')
+    }).catch((err) =>{
+        console.log(err);
+    });
+});
+
 app.get('/blogs/create', (req, res) =>{
     res.render('create', {
         title: 'Create Blog'
     });
 });
+
+app.get('/blogs/:id', (req, res) =>{
+    const id = req.params.id;
+    console.log(id);
+    Blog.findById(id).then((result) =>{
+        res.render('details', {
+            title: result.title,
+            blog: result
+        })
+    }).catch((err) =>{
+        console.log(err);
+    });
+});
+
+app.delete('/blogs/:id', (req, res) =>{
+    const id = req.params.id;
+    Blog.findByIdAndDelete(id).then((result) =>{
+        res.json({ redirect: '/blogs' });
+    }).catch((err) =>{
+        console.log(err);
+    });
+    
+});
+
 
 app.use((req, res) =>{
     res.render('404', {
