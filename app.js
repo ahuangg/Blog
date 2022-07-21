@@ -7,7 +7,7 @@ const app = express();
 
 
 //connect to mongodb 
-const dburl = "Enter Data Base URL Here"
+const dburl = "mongodb+srv://user:pass@pet.hpbdy.mongodb.net/node-test?retryWrites=true&w=majority"
 mongoose.connect(dburl, {useNewUrlParser: true, useUnifiedTopology: true})
 //listen to request only when connected
 .then((result) => app.listen(3000))
